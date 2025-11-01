@@ -41,3 +41,4 @@ void destroyShape(shape shap);
 void addArcToShape(shape * shap, float X, float Y, float phase, float radius, float angle, long long n, char flip);
 void * drawLine(void * line);
 void checkBoundaries(shape * shap);
+void addPointToShape(shape * shap, float X, float Y);

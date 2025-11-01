@@ -48,7 +48,7 @@ int main(int argc, char **argv) {
     addArcToShape(&mouthR, 0.65, 0.6, 0, 0.19, arcLen, 20,1);
     addArcToShape(&mouthR, 0.65, 0.6, -1, 0.15, arcLen, 20,0);
 
-    printf("Maximums: %lf %lf %lf %lf\n",mouthL.HX,mouthL.LX,mouthL.HY,mouthL.LY);
+    addPointToShape(&mouthR, 0.5, 0.5);
     // for(int i = 0; i < 16; i++) {
         // eye.X[i] = triangleX[i];
         // eye.Y[i] = triangleY[i];

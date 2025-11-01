@@ -157,3 +157,16 @@ void addArcToShape(shape * shap, float X, float Y, float phase, float radius, fl
     }
     checkBoundaries(shap);
 }
+
+void addPointToShape(shape * shap, float X, float Y) {
+
+    long long prevSize = shap->sizeOfShape;
+
+    expandShape(shap, 1);
+
+    shap->X[prevSize] = X;
+    shap->Y[prevSize] =  Y;
+
+    checkBoundaries(shap);
+}
+
