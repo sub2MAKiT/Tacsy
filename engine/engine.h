@@ -16,6 +16,10 @@ typedef struct shapeStruct {
     unsigned long long sizeOfShape;
     float * X;
     float * Y;
+    float HY;
+    float LY;
+    float HX;
+    float LX;
 } shape;
 
 
@@ -36,3 +40,4 @@ void expandShape(shape * shap,unsigned long long n);
 void destroyShape(shape shap);
 void addArcToShape(shape * shap, float X, float Y, float phase, float radius, float angle, long long n, char flip);
 void * drawLine(void * line);
+void checkBoundaries(shape * shap);

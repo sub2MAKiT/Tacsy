@@ -44,14 +44,29 @@ char checkShape(float * shapeX, float * shapeY, float pointX, float pointY, long
 
 // }
 
+void checkBoundaries(shape * shap) {
+    shap->HY = 0.0;
+    shap->LY = 1.0;
+    shap->HX = 0.0;
+    shap->LX = 1.0;
+
+    for(int i = 0; i < shap->sizeOfShape; i++) {
+        shap->HY = shap->Y[i] > shap->HY?shap->Y[i]:shap->HY;
+        shap->LY = shap->Y[i] < shap->LY?shap->Y[i]:shap->LY;
+        shap->HX = shap->X[i] > shap->HX?shap->X[i]:shap->HX;
+        shap->LX = shap->X[i] < shap->LX?shap->X[i]:shap->LX;
+    }
+    return;
+}
+
 void * drawLine(void * inp) {
 
     lineD * line = inp;
-    for(int i = 0; i < line->packSize; i++) {
-        for(int j = 0; j < width; j++)
-            line->line[j+i*(width+1)] = checkShape(line->shap.X,line->shap.Y,((float)j)/width,((float)(line->lineDex*line->packSize + i))/height,line->shap.sizeOfShape)?'1':line->line[j+i*(width+1)];
-        line->line[(i+1)*(width+1)] = '\n';
-    }
+    for(int i = 0; i < line->packSize; i++)
+        if( !(((float)(line->lineDex*line->packSize + i))/height > line->shap.HY || ((float)(line->lineDex*line->packSize + i))/height < line->shap.LY) )
+            for(int j = 0; j < width; j++)
+                if( !(((float)j)/width > line->shap.HX || ((float)j)/width < line->shap.LX) )
+                    line->line[j+i*(width+1)] = checkShape(line->shap.X,line->shap.Y,((float)j)/width,((float)(line->lineDex*line->packSize + i))/height,line->shap.sizeOfShape)?'1':line->line[j+i*(width+1)];
 }
 
 
@@ -103,6 +118,10 @@ shape createShape(unsigned long long n) {
     shap.X = malloc(n*sizeof(float));
     shap.Y = malloc(n*sizeof(float));
 
+    checkBoundaries(&shap);
+
+
+
     return shap;
 }
 
@@ -136,4 +155,5 @@ void addArcToShape(shape * shap, float X, float Y, float phase, float radius, fl
         shap->X[prevSize+i] = radius * cos(phase + angle/n*i)*(flip?-1:1) + X;
         shap->Y[prevSize+i] =  radius * sin(phase + angle/n*i) + Y;
     }
+    checkBoundaries(shap);
 }

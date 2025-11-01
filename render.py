@@ -30,7 +30,7 @@ with open("tacsy.buff", "r+b") as f:
     # buf[0:2] = b'AB'
     
     # Read from the buffer
-    print(buf[0:2].decode())  # Output: 'AB'
+    # print(buf[0:2].decode())  # Output: 'AB'
 
 
 
@@ -43,5 +43,5 @@ with open("tacsy.buff", "r+b") as f:
     for i in range(height):
         for j in range(width):
             img.putpixel( (j, i), getPixValue(chr(buf[j+i*(width+1)])) )
-        print(chr(buf[j+i*width]))
+        # print(chr(buf[j+i*width]))
     img.save("testtemp.png")
