@@ -22,17 +22,18 @@ int main(int argc, char **argv) {
     int totInd = 0;
 
 
-    shape eyeL; // = createShape(0);
-    shape eyeR; // = createShape(0);
-
-    shape mouthL; // = createShape(0);
-    shape mouthR; // = createShape(0);
-
+    shape eyeL;
     eyeL.sizeOfShape = 0;
+
+    shape eyeR;
     eyeR.sizeOfShape = 0;
 
+    shape mouthL;
     mouthL.sizeOfShape = 0;
+    shape mouthR;
     mouthR.sizeOfShape = 0;
+
+
 
     // from -1.5 to 1.5
 
@@ -48,17 +49,17 @@ int main(int argc, char **argv) {
     addArcToShape(&mouthR, 0.65, 0.6, 0, 0.19, arcLen, 20,1);
     addArcToShape(&mouthR, 0.65, 0.6, -1, 0.15, arcLen, 20,0);
 
-    addPointToShape(&mouthR, 0.5, 0.5);
+    // addPointToShape(&mouthR, 0.5, 0.5);
     // for(int i = 0; i < 16; i++) {
         // eye.X[i] = triangleX[i];
         // eye.Y[i] = triangleY[i];
     // }
 
     fillBuff('0',buf);
-    drawShape(eyeL,buf);
-    drawShape(eyeR,buf);
-    drawShape(mouthL,buf);
-    drawShape(mouthR,buf);
+    drawShape(eyeL,buf,'9');
+    drawShape(eyeR,buf,'R');
+    drawShape(mouthL,buf,'G');
+    drawShape(mouthR,buf,'B');
 
 
     // Clean up

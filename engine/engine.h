@@ -28,12 +28,13 @@ typedef struct lineStruct {
     char * line;
     unsigned long long lineDex;
     unsigned long long packSize;
+    char col;
 } lineD;
 
 char checkLine(float p0X, float p0Y, float p1X, float p1Y, float pointX, float pointY);
 char checkShape(float * shapeX, float * shapeY, float pointX, float pointY, long long sizeOfShape);
 // char determineCol(float x,float y);
-void drawShape(shape shap, void * buf);
+void drawShape(shape shap, void * buf, char col);
 void fillBuff(char fill, void * buf);
 shape createShape(unsigned long long n);
 void expandShape(shape * shap,unsigned long long n);

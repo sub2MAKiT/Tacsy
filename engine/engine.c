@@ -66,11 +66,11 @@ void * drawLine(void * inp) {
         if( !(((float)(line->lineDex*line->packSize + i))/height > line->shap.HY || ((float)(line->lineDex*line->packSize + i))/height < line->shap.LY) )
             for(int j = 0; j < width; j++)
                 if( !(((float)j)/width > line->shap.HX || ((float)j)/width < line->shap.LX) )
-                    line->line[j+i*(width+1)] = checkShape(line->shap.X,line->shap.Y,((float)j)/width,((float)(line->lineDex*line->packSize + i))/height,line->shap.sizeOfShape)?'1':line->line[j+i*(width+1)];
+                    line->line[j+i*(width+1)] = checkShape(line->shap.X,line->shap.Y,((float)j)/width,((float)(line->lineDex*line->packSize + i))/height,line->shap.sizeOfShape)?line->col:line->line[j+i*(width+1)];
 }
 
 
-void drawShape(shape shap, void * buf) {
+void drawShape(shape shap, void * buf, char col) {
     int totInd = 0;
 
     pthread_t threads[height];
@@ -83,7 +83,7 @@ void drawShape(shape shap, void * buf) {
         tempLine[i].line = &(((char*)buf)[(width+1)*i*packsize]);
         tempLine[i].lineDex = i;
         tempLine[i].packSize = packsize;
-
+        tempLine[i].col = col;
 
         // drawLine(&tempLine[i]);
 

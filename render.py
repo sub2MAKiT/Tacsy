@@ -5,16 +5,14 @@ from PIL import Image
 def getPixValue(char):
     if char == '0':
         return (0,0,0,255)
-    elif char == '1':
-        return (255,0,0,255)
-    elif char == '2':
+    elif char == '9':
+        return (255,255,255,255)
+    elif char == 'R':
+        return (255,0,00,255)
+    elif char == 'G':
         return (0,255,0,255)
-    elif char == '3':
-        return (255,255,0,255)
-    elif char == '4':
-        return (255,0,255,255)
-    elif char == '5':
-        return (0,255,255,255)
+    elif char == 'B':
+        return (0,0,255,255)
     return (100,100,100,255)
 
 
