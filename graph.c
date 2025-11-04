@@ -21,52 +21,42 @@ int main(int argc, char **argv) {
 
     int totInd = 0;
 
+    allShapes = malloc(1);
 
-    shape eyeL;
-    eyeL.sizeOfShape = 0;
+    sizeOfAllShapes = 0;
 
-    shape eyeR;
-    eyeR.sizeOfShape = 0;
 
-    shape mouthL;
-    mouthL.sizeOfShape = 0;
-    shape mouthR;
-    mouthR.sizeOfShape = 0;
+    unsigned long long eyeL = createShape();
+
+    unsigned long long eyeR = createShape();
+
+    unsigned long long mouthL = createShape();
+    unsigned long long mouthR = createShape();
 
 
 
     // from -1.5 to 1.5
 
 
-    addArcToShape(&eyeL, 0.2, 0.2,concernThroughHornyToAngyRatio, 0.15, 4.7, 20,0);
-    addArcToShape(&eyeR, 0.8, 0.2,concernThroughHornyToAngyRatio, 0.15, 4.7, 20,1);
+    addArcToShape(eyeL, 0.2, 0.2,concernThroughHornyToAngyRatio, 0.15, 4.7, 20,0);
+    addArcToShape(eyeR, 0.8, 0.2,concernThroughHornyToAngyRatio, 0.15, 4.7, 20,1);
 
     float arcLen = 4.2;
 
-    addArcToShape(&mouthL, 0.35, 0.6, -1, 0.15, arcLen, 20,1);
-    addArcToShape(&mouthL, 0.35, 0.6, 0, 0.19, arcLen, 20,0);
+    addArcToShape(mouthL, 0.35, 0.6, -1, 0.15, arcLen, 20,1);
+    addArcToShape(mouthL, 0.35, 0.6, 0, 0.19, arcLen, 20,0);
 
-    addArcToShape(&mouthR, 0.65, 0.6, 0, 0.19, arcLen, 20,1);
-    addArcToShape(&mouthR, 0.65, 0.6, -1, 0.15, arcLen, 20,0);
+    addArcToShape(mouthR, 0.65, 0.6, 0, 0.19, arcLen, 20,1);
+    addArcToShape(mouthR, 0.65, 0.6, -1, 0.15, arcLen, 20,0);
 
-    // addPointToShape(&mouthR, 0.5, 0.5);
-    // for(int i = 0; i < 16; i++) {
-        // eye.X[i] = triangleX[i];
-        // eye.Y[i] = triangleY[i];
-    // }
+
 
     fillBuff('0',buf);
-    drawShape(eyeL,buf,'9');
-    drawShape(eyeR,buf,'R');
-    drawShape(mouthL,buf,'G');
-    drawShape(mouthR,buf,'B');
+    drawShapes(buf);
 
 
     // Clean up
-    destroyShape(eyeL);
-    destroyShape(eyeR);
-    destroyShape(mouthL);
-    destroyShape(mouthR);
+    destroyShapes();
     munmap(buf, st.st_size);
     close(fd);
     return 0;

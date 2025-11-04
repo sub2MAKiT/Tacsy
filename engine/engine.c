@@ -1,5 +1,7 @@
 #include "engine.h"
 
+shape * allShapes;
+unsigned long long sizeOfAllShapes;
 
 char checkLine(float p0X, float p0Y, float p1X, float p1Y, float pointX, float pointY) {
 
@@ -70,35 +72,37 @@ void * drawLine(void * inp) {
 }
 
 
-void drawShape(shape shap, void * buf, char col) {
+void drawShapes(void * buf) {
     int totInd = 0;
 
     pthread_t threads[height];
     lineD tempLine[height];
 
     int packsize = 20;
+    for(int shpindex = 0; shpindex < sizeOfAllShapes; shpindex++) {
+        for(int i = 0; i < height/packsize; i++) {
+            tempLine[i].shap = allShapes[shpindex];
+            tempLine[i].line = &(((char*)buf)[(width+1)*i*packsize]);
+            tempLine[i].lineDex = i;
+            tempLine[i].packSize = packsize;
+            tempLine[i].col = 'R';
 
-    for(int i = 0; i < height/packsize; i++) {
-        tempLine[i].shap = shap;
-        tempLine[i].line = &(((char*)buf)[(width+1)*i*packsize]);
-        tempLine[i].lineDex = i;
-        tempLine[i].packSize = packsize;
-        tempLine[i].col = col;
+            // drawLine(&tempLine[i]);
 
-        // drawLine(&tempLine[i]);
-
-        int rc = pthread_create(&threads[i], NULL, drawLine,
-                            (void*)&tempLine[i]);
-        if (rc) {
-            printf("Error: unable to create thread, %d\n",
-                   rc);
-            exit(-1);
+            int rc = pthread_create(&threads[i], NULL, drawLine,
+                                (void*)&tempLine[i]);
+            if (rc) {
+                printf("Error: unable to create thread, %d\n",
+                    rc);
+                exit(-1);
+            }
+        }
+        for (int i = 0; i < height; ++i) {
+            pthread_join(threads[i], NULL);
         }
     }
 
-    for (int i = 0; i < height; ++i) {
-        pthread_join(threads[i], NULL);
-    }
+
 
 }
 
@@ -111,18 +115,18 @@ void fillBuff(char fill, void * buf) {
     }
 }
 
-shape createShape(unsigned long long n) {
-    shape shap;
-
-    shap.sizeOfShape = n;
-    shap.X = malloc(n*sizeof(float));
-    shap.Y = malloc(n*sizeof(float));
-
-    checkBoundaries(&shap);
+unsigned long long createShape() {
+    sizeOfAllShapes += 1;
+    allShapes = realloc(allShapes,sizeOfAllShapes * sizeof(shape));
 
 
+    allShapes[sizeOfAllShapes-1].sizeOfShape = 0;
+    allShapes[sizeOfAllShapes-1].X = malloc(1);
+    allShapes[sizeOfAllShapes-1].Y = malloc(1);
 
-    return shap;
+    checkBoundaries(&allShapes[sizeOfAllShapes-1]);
+
+    return sizeOfAllShapes-1;
 }
 
 void expandShape(shape * shap,unsigned long long n) {
@@ -139,23 +143,27 @@ void expandShape(shape * shap,unsigned long long n) {
     return;
 }
 
-void destroyShape(shape shap) {
-    free(shap.X);
-    free(shap.Y);
+void destroyShapes() {
+    for(int i = 0; i < sizeOfAllShapes; i++) {
+        free(allShapes[i].X);
+        free(allShapes[i].Y);
+    }
+
+    free(allShapes);
     return;
 }
 
-void addArcToShape(shape * shap, float X, float Y, float phase, float radius, float angle, long long n, char flip) {
+void addArcToShape(unsigned long long shpindex, float X, float Y, float phase, float radius, float angle, long long n, char flip) {
 
-    long long prevSize = shap->sizeOfShape;
+    long long prevSize = allShapes[shpindex].sizeOfShape;
 
-    expandShape(shap, n);
+    expandShape(&allShapes[shpindex], n);
 
     for(int i = 0; i < n; i++) {
-        shap->X[prevSize+i] = radius * cos(phase + angle/n*i)*(flip?-1:1) + X;
-        shap->Y[prevSize+i] =  radius * sin(phase + angle/n*i) + Y;
+        allShapes[shpindex].X[prevSize+i] = radius * cos(phase + angle/n*i)*(flip?-1:1) + X;
+        allShapes[shpindex].Y[prevSize+i] =  radius * sin(phase + angle/n*i) + Y;
     }
-    checkBoundaries(shap);
+    checkBoundaries(&allShapes[shpindex]);
 }
 
 void addPointToShape(shape * shap, float X, float Y) {

@@ -1,3 +1,5 @@
+#pragma once
+
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -34,12 +36,15 @@ typedef struct lineStruct {
 char checkLine(float p0X, float p0Y, float p1X, float p1Y, float pointX, float pointY);
 char checkShape(float * shapeX, float * shapeY, float pointX, float pointY, long long sizeOfShape);
 // char determineCol(float x,float y);
-void drawShape(shape shap, void * buf, char col);
+void drawShapes(void * buf);
 void fillBuff(char fill, void * buf);
-shape createShape(unsigned long long n);
+unsigned long long createShape();
 void expandShape(shape * shap,unsigned long long n);
-void destroyShape(shape shap);
-void addArcToShape(shape * shap, float X, float Y, float phase, float radius, float angle, long long n, char flip);
+void destroyShapes();
+void addArcToShape(unsigned long long shpindex, float X, float Y, float phase, float radius, float angle, long long n, char flip);
 void * drawLine(void * line);
 void checkBoundaries(shape * shap);
 void addPointToShape(shape * shap, float X, float Y);
+
+extern shape * allShapes;
+extern unsigned long long sizeOfAllShapes;
