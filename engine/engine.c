@@ -37,15 +37,6 @@ char checkShape(float * shapeX, float * shapeY, float pointX, float pointY, long
 
 }
 
-// char determineCol(float x,float y) {
-
-//     if(checkShape(triangleX,triangleY,x,y,16))
-//         return '1';
-//     else
-//         return '0';
-
-// }
-
 void checkBoundaries(shape * shap) {
     shap->HY = 0.0;
     shap->LY = 1.0;
@@ -68,13 +59,17 @@ void * drawLine(void * inp) {
         if( !(((float)(line->lineDex*line->packSize + i))/height > line->shap.HY || ((float)(line->lineDex*line->packSize + i))/height < line->shap.LY) )
             for(int j = 0; j < width; j++)
                 if( !(((float)j)/width > line->shap.HX || ((float)j)/width < line->shap.LX) )
-                    line->line[j+i*(width+1)] = checkShape(line->shap.X,line->shap.Y,((float)j)/width,((float)(line->lineDex*line->packSize + i))/height,line->shap.sizeOfShape)?line->col:line->line[j+i*(width+1)];
+                    if(checkShape(line->shap.X,line->shap.Y,((float)j)/width,((float)(line->lineDex*line->packSize + i))/height,line->shap.sizeOfShape)) {
+                        line->line[j+i*width].R = line->col.R*line->col.A/255 + line->col.R*line->line[j+i*width].A/255;
+                        line->line[j+i*width].G = line->col.G*line->col.A/255 + line->col.G*line->line[j+i*width].A/255;
+                        line->line[j+i*width].B = line->col.B*line->col.A/255 + line->col.B*line->line[j+i*width].A/255;
+                        line->line[j+i*width].A = 255;
+                    }
 }
 
 
 void drawShapes(void * buf) {
     int totInd = 0;
-
     pthread_t threads[height];
     lineD tempLine[height];
 
@@ -82,10 +77,10 @@ void drawShapes(void * buf) {
     for(int shpindex = 0; shpindex < sizeOfAllShapes; shpindex++) {
         for(int i = 0; i < height/packsize; i++) {
             tempLine[i].shap = allShapes[shpindex];
-            tempLine[i].line = &(((char*)buf)[(width+1)*i*packsize]);
+            tempLine[i].line = &(((RGBA*)buf)[width*i*packsize]);
             tempLine[i].lineDex = i;
             tempLine[i].packSize = packsize;
-            tempLine[i].col = 'R';
+            tempLine[i].col = allShapes[shpindex].col;
 
             // drawLine(&tempLine[i]);
 
@@ -106,12 +101,11 @@ void drawShapes(void * buf) {
 
 }
 
-void fillBuff(char fill, void * buf) {
+void fillBuff(RGBA fill, void * buf) {
     int totInd = 0;
     for(float i = 0; i < height; i++) {
         for(float j = 0; j < width; j++)
-            ((char*)buf)[totInd++] = fill;
-        ((char*)buf)[totInd++] = '\n';
+            ((RGBA*)buf)[totInd++] = fill;
     }
 }
 
@@ -124,7 +118,14 @@ unsigned long long createShape() {
     allShapes[sizeOfAllShapes-1].X = malloc(1);
     allShapes[sizeOfAllShapes-1].Y = malloc(1);
 
+    allShapes[sizeOfAllShapes-1].col.R = 255;
+    allShapes[sizeOfAllShapes-1].col.G = 255;
+    allShapes[sizeOfAllShapes-1].col.B = 255;
+    allShapes[sizeOfAllShapes-1].col.A = 255;
+
     checkBoundaries(&allShapes[sizeOfAllShapes-1]);
+
+
 
     return sizeOfAllShapes-1;
 }
@@ -166,15 +167,25 @@ void addArcToShape(unsigned long long shpindex, float X, float Y, float phase, f
     checkBoundaries(&allShapes[shpindex]);
 }
 
-void addPointToShape(shape * shap, float X, float Y) {
+void addPointToShape(unsigned long long shpindex, float X, float Y) {
 
-    long long prevSize = shap->sizeOfShape;
+    long long prevSize = allShapes[shpindex].sizeOfShape;
 
-    expandShape(shap, 1);
+    expandShape(&allShapes[shpindex], 1);
 
-    shap->X[prevSize] = X;
-    shap->Y[prevSize] =  Y;
+    allShapes[shpindex].X[prevSize] = X;
+    allShapes[shpindex].Y[prevSize] =  Y;
 
-    checkBoundaries(shap);
+    checkBoundaries(&allShapes[shpindex]);
+}
+
+void setShapeColour(unsigned long long shpindex, char R, char G, char B, char A) {
+
+    allShapes[shpindex].col.R = R;
+    allShapes[shpindex].col.G = G;
+    allShapes[shpindex].col.B = B;
+    allShapes[shpindex].col.A = A;
+
+
 }
 

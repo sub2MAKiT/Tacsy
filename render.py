@@ -3,21 +3,21 @@ import os
 from PIL import Image  
 
 def getPixValue(char):
-    if char == '0':
-        return (0,0,0,255)
-    elif char == '9':
-        return (255,255,255,255)
-    elif char == 'R':
-        return (255,0,00,255)
-    elif char == 'G':
-        return (0,255,0,255)
-    elif char == 'B':
-        return (0,0,255,255)
-    return (100,100,100,255)
+    # if char == '0':
+    #     return (0,0,char,255)
+    # elif char == '9':
+    #     return (255,255,char,255)
+    # elif char == 'R':
+    #     return (255,0,char,255)
+    # elif char == 'G':
+    #     return (0,255,0,255)
+    # elif char == 'B':
+    #     return (0,0,255,255)
+    return (100,100,char,255)
 
 
 # Open the file (use O_RDWR for read/write access)
-with open("tacsy.buff", "r+b") as f:
+with open("tacsyRGBA.buff", "r+b") as f:
     # Get the file size (use this for buffer size)
     size = os.fstat(f.fileno()).st_size
     
@@ -40,6 +40,6 @@ with open("tacsy.buff", "r+b") as f:
     
     for i in range(height):
         for j in range(width):
-            img.putpixel( (j, i), getPixValue(chr(buf[j+i*(width+1)])) )
+            img.putpixel( (j, i), (buf[(j+i*width)*4],buf[(j+i*width)*4 + 1],buf[(j+i*width)*4 + 2],buf[(j+i*width)*4 + 3])) #getPixValue() )
         # print(chr(buf[j+i*width]))
     img.save("testtemp.png")
