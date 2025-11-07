@@ -21,6 +21,13 @@ typedef struct RGBAStruct {
     unsigned char A;
 } RGBA;
 
+typedef struct RGBADoubleStruct {
+    unsigned char R;
+    unsigned char G;
+    unsigned char B;
+    unsigned char A;
+} RGBAd;
+
 typedef struct shapeStruct {
     unsigned long long sizeOfShape;
     float * X;

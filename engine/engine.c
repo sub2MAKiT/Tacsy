@@ -3,8 +3,44 @@
 shape * allShapes;
 unsigned long long sizeOfAllShapes;
 
+// RGBAd convertToRGBAd(RGBA col) {
+//     RGBAd new;
+
+//     new.R = (float)(col.R)/255;
+//     new.G = (float)(col.G)/255;
+//     new.B = (float)(col.B)/255;
+//     new.A = (float)(col.A)/255;
+
+//     return new;
+// }
+
+// RGBA convertToRGBA(RGBAd col) {
+//     RGBA new;
+
+//     new.R = col.R*255;
+//     new.G = col.G*255;
+//     new.B = col.B*255;
+//     new.A = col.A*255;
+
+//     return new;
+// }
+
+
+RGBA mixColours(RGBA colA, RGBA colB) {
+    RGBA mixed;
+
+    mixed.A = ((float)(colA.A)/255 + (1-(float)(colA.A)/255) * (float)(colB.A)/255)*255;
+    mixed.R = ( (float)(colA.R)/255 * (float)(colA.A)/255 / ((float)(colA.A)/255+ (float)(colB.A)/255) + (float)(colB.R)/255 * (float)(colB.A)/255 / ((float)(colA.A)/255+ (float)(colB.A)/255)  ) * 255;
+    mixed.G = ( (float)(colA.G)/255 * (float)(colA.A)/255 / ((float)(colA.A)/255+ (float)(colB.A)/255) + (float)(colB.G)/255 * (float)(colB.A)/255 / ((float)(colA.A)/255+ (float)(colB.A)/255)  ) * 255;
+    mixed.B = ( (float)(colA.B)/255 * (float)(colA.A)/255 / ((float)(colA.A)/255+ (float)(colB.A)/255) + (float)(colB.B)/255 * (float)(colB.A)/255 / ((float)(colA.A)/255+ (float)(colB.A)/255)  ) * 255;
+    return mixed;
+}
+
 char checkLine(float p0X, float p0Y, float p1X, float p1Y, float pointX, float pointY) {
 
+
+    if(p0X == pointX || p1X == pointX)
+        return 0; // I think this should help with the hor-line errors... I hope...
 
     if(pointY<(p1Y > p0Y?p0Y:p1Y) || pointY>(p1Y > p0Y?p1Y:p0Y))
         return 0;
@@ -59,12 +95,8 @@ void * drawLine(void * inp) {
         if( !(((float)(line->lineDex*line->packSize + i))/height > line->shap.HY || ((float)(line->lineDex*line->packSize + i))/height < line->shap.LY) )
             for(int j = 0; j < width; j++)
                 if( !(((float)j)/width > line->shap.HX || ((float)j)/width < line->shap.LX) )
-                    if(checkShape(line->shap.X,line->shap.Y,((float)j)/width,((float)(line->lineDex*line->packSize + i))/height,line->shap.sizeOfShape)) {
-                        line->line[j+i*width].R = line->col.R*line->col.A/255 + line->col.R*line->line[j+i*width].A/255;
-                        line->line[j+i*width].G = line->col.G*line->col.A/255 + line->col.G*line->line[j+i*width].A/255;
-                        line->line[j+i*width].B = line->col.B*line->col.A/255 + line->col.B*line->line[j+i*width].A/255;
-                        line->line[j+i*width].A = 255;
-                    }
+                    if(checkShape(line->shap.X,line->shap.Y,((float)j)/width,((float)(line->lineDex*line->packSize + i))/height,line->shap.sizeOfShape))
+                        line->line[j+i*width] = mixColours(line->line[j+i*width],line->col);
 }
 
 
@@ -81,8 +113,6 @@ void drawShapes(void * buf) {
             tempLine[i].lineDex = i;
             tempLine[i].packSize = packsize;
             tempLine[i].col = allShapes[shpindex].col;
-
-            // drawLine(&tempLine[i]);
 
             int rc = pthread_create(&threads[i], NULL, drawLine,
                                 (void*)&tempLine[i]);
