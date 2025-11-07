@@ -3,6 +3,7 @@
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -48,7 +49,7 @@ typedef struct lineStruct {
     RGBA col;
 } lineD; // what in the actual fuck is this struct?
 
-char checkLine(float p0X, float p0Y, float p1X, float p1Y, float pointX, float pointY);
+char checkLine(float p0X, float p0Y, float p1X, float p1Y, float pointX, float pointY, char metaData);
 char checkShape(float * shapeX, float * shapeY, float pointX, float pointY, long long sizeOfShape);
 // char determineCol(float x,float y);
 void drawShapes(void * buf);
