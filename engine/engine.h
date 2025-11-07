@@ -37,6 +37,8 @@ typedef struct shapeStruct {
     float LY;
     float HX;
     float LX;
+    RGBA (*customCol)(float, float);
+    char useCustomCol;
     RGBA col;
 } shape;
 
@@ -47,6 +49,8 @@ typedef struct lineStruct {
     unsigned long long lineDex;
     unsigned long long packSize;
     RGBA col;
+    RGBA (*customCol)(float, float);
+    char useCustomCol;
 } lineD; // what in the actual fuck is this struct?
 
 char checkLine(float p0X, float p0Y, float p1X, float p1Y, float pointX, float pointY);
@@ -63,6 +67,7 @@ void checkBoundaries(shape * shap);
 void addPointToShape(unsigned long long shpindex, float X, float Y);
 void setShapeColour(unsigned long long shpindex, char R, char G, char B, char A);
 RGBA mixColours(RGBA colA, RGBA colB);
+void setShapeCustomColour(unsigned long long shpindex, RGBA (*customCol)(float, float));
 
 extern shape * allShapes;
 extern unsigned long long sizeOfAllShapes;

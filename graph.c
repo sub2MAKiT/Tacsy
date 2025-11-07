@@ -1,11 +1,42 @@
 #include "engine/engine.h"
 // #include <perror.h>
 
-
-
 float triangleX[] = {0.1,0.2,0.5,0.8,0.9,0.9,0.6,0.9,0.9,0.8,0.5,0.2,0.1,0.1,0.4,0.1};
 float triangleY[] = {0.9,0.9,0.6,0.9,0.9,0.8,0.5,0.2,0.1,0.1,0.4,0.1,0.1,0.2,0.5,0.8};
 
+
+// RGBA RGBAToHSVA(RGBA col) {
+//     RGBA retVal;
+//     float r = (float)(retVal).R/255;
+//     float g = (float)(retVal).G/255;
+//     float b = (float)(retVal).B/255;
+//     float maxc = fmax(fmax(r, g), b);
+//     float minc = fmin(fmin(r, g), b);
+//     float v = maxc;
+//     if(minc == maxc)
+//         return (RGBA){0, 0, v*255,col.A};
+//     float s = (maxc-minc) / maxc;
+//     float rc = (maxc-r) / (maxc-minc);
+//     float gc = (maxc-g) / (maxc-minc);
+//     float bc = (maxc-b) / (maxc-minc);
+//     float h;
+//     if(r == maxc)
+//         h = 0.0+bc-gc;
+//     else if(g == maxc)
+//         h = 2.0+rc-bc;
+//     else
+//         h = 4.0+gc-rc;
+//     h = (h/6.0);
+//     return (RGBA){h *255, s *255, v*255,col.A};
+// }
+
+float input;
+
+RGBA rainbow(float X, float Y) {
+    RGBA rainbow[6] = {(RGBA){255,0,0,255},(RGBA){250,130,0,255},(RGBA){200,200,0,255},(RGBA){0,255,0,255},(RGBA){0,0,255,255},(RGBA){150,0,255,255}};
+
+    return rainbow[(unsigned char)((X+Y-0.2 + 0.1)/2*9)%6];
+}
 
 
 int main(int argc, char **argv) {
@@ -13,16 +44,20 @@ int main(int argc, char **argv) {
     fptr = fopen("tacsyRGBA.buff", "w");
     void *buf = malloc(width*height*sizeof(RGBA));
 
-    int input = 0;
+    float input = 0.0;
 
     if(argc > 1)
-       input = atoi(argv[1]);
+       input = atof(argv[1]);
 
     int totInd = 0;
 
     allShapes = malloc(1);
 
     sizeOfAllShapes = 0;
+
+    // RGBA testCol = RGBAToHSVA((RGBA){255,255,255,255});
+
+    // printf("test: %d %d %d %d\n",testCol.R,testCol.G,testCol.B,testCol.A);
 
     unsigned long long eyeL = createShape();
 
@@ -34,22 +69,34 @@ int main(int argc, char **argv) {
 
     // unsigned long long brick = createShape();
 
-    setShapeColour(eyeL,255,0,0,100);
+    // addPointToShape(brick,0,0);
+    // addPointToShape(brick,0,1);
+    // addPointToShape(brick,1,1);
+    // addPointToShape(brick,1,0);
 
-    setShapeColour(eyeR,0,255,0,200);
+    // setShapeColour(eyeL,255,0,0,100);
 
-    setShapeColour(mouthL,0,0,255,70);
-    setShapeColour(mouthR,170,160,8,150);
+    // setShapeColour(eyeR,0,255,0,200);
+
+    // setShapeColour(mouthL,0,0,255,70);
+    // setShapeColour(mouthR,170,160,8,150);
+
+    setShapeCustomColour(eyeL,rainbow);
+    setShapeCustomColour(eyeR,rainbow);
+    setShapeCustomColour(mouthL,rainbow);
+    setShapeCustomColour(mouthR,rainbow);
 
 
-    unsigned long long testForLine = createShape();
+    // unsigned long long testForLine = createShape();
 
-    addPointToShape(testForLine,0.1,0.1);
-    addPointToShape(testForLine,0.3,0.1);
-    addPointToShape(testForLine,0.5,0.3);
-    addPointToShape(testForLine,0.2,0.6);
-    addPointToShape(testForLine,0.5,0.9);
-    addPointToShape(testForLine,0.1,0.9);
+    // addPointToShape(testForLine,0.1,0.1);
+    // addPointToShape(testForLine,0.3,0.1);
+    // addPointToShape(testForLine,0.5,0.3);
+    // addPointToShape(testForLine,0.2,0.6);
+    // addPointToShape(testForLine,0.5,0.9);
+    // addPointToShape(testForLine,0.1,0.9);
+
+    // setShapeColour(testForLine,255,255,255,70);
 
     // unsigned long long brick[6];
 
@@ -96,7 +143,7 @@ int main(int argc, char **argv) {
     blank.R = 0;
     blank.G = 0;
     blank.B = 0;
-    blank.A = 0;
+    blank.A = 255;
 
     fillBuff(blank,buf);
     drawShapes(buf);

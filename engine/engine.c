@@ -3,29 +3,6 @@
 shape * allShapes;
 unsigned long long sizeOfAllShapes;
 
-// RGBAd convertToRGBAd(RGBA col) {
-//     RGBAd new;
-
-//     new.R = (float)(col.R)/255;
-//     new.G = (float)(col.G)/255;
-//     new.B = (float)(col.B)/255;
-//     new.A = (float)(col.A)/255;
-
-//     return new;
-// }
-
-// RGBA convertToRGBA(RGBAd col) {
-//     RGBA new;
-
-//     new.R = col.R*255;
-//     new.G = col.G*255;
-//     new.B = col.B*255;
-//     new.A = col.A*255;
-
-//     return new;
-// }
-
-
 RGBA mixColours(RGBA colA, RGBA colB) {
     RGBA mixed;
 
@@ -39,7 +16,7 @@ RGBA mixColours(RGBA colA, RGBA colB) {
 char checkLine(float p0X, float p0Y, float p1X, float p1Y, float pointX, float pointY) {
 
     if((pointY==p0Y && pointX > p0X) || (pointY==p1Y && pointX > p1X))
-            return 3;
+            return 4;
 
     if(pointY<=(p1Y > p0Y?p0Y:p1Y) || pointY>=(p1Y > p0Y?p1Y:p0Y))
         return 0;
@@ -89,13 +66,14 @@ void checkBoundaries(shape * shap) {
 
 void * drawLine(void * inp) {
 
+
     lineD * line = inp;
     for(int i = 0; i < line->packSize; i++)
         if( !(((float)(line->lineDex*line->packSize + i))/height > line->shap.HY || ((float)(line->lineDex*line->packSize + i))/height < line->shap.LY) )
             for(int j = 0; j < width; j++)
                 if( !(((float)j)/width > line->shap.HX || ((float)j)/width < line->shap.LX) )
                     if(checkShape(line->shap.X,line->shap.Y,((float)j)/width,((float)(line->lineDex*line->packSize + i))/height,line->shap.sizeOfShape))
-                        line->line[j+i*width] = mixColours(line->line[j+i*width],line->col);
+                        line->line[j+i*width] = mixColours(line->line[j+i*width],line->useCustomCol?line->customCol(((float)j)/width,((float)(line->lineDex*line->packSize + i))/height):line->col);
 }
 
 
@@ -112,6 +90,8 @@ void drawShapes(void * buf) {
             tempLine[i].lineDex = i;
             tempLine[i].packSize = packsize;
             tempLine[i].col = allShapes[shpindex].col;
+            tempLine[i].useCustomCol = allShapes[shpindex].useCustomCol;
+            tempLine[i].customCol = allShapes[shpindex].customCol;
 
             int rc = pthread_create(&threads[i], NULL, drawLine,
                                 (void*)&tempLine[i]);
@@ -151,6 +131,8 @@ unsigned long long createShape() {
     allShapes[sizeOfAllShapes-1].col.G = 255;
     allShapes[sizeOfAllShapes-1].col.B = 255;
     allShapes[sizeOfAllShapes-1].col.A = 255;
+
+    allShapes[sizeOfAllShapes-1].useCustomCol = 0;
 
     checkBoundaries(&allShapes[sizeOfAllShapes-1]);
 
@@ -215,6 +197,14 @@ void setShapeColour(unsigned long long shpindex, char R, char G, char B, char A)
     allShapes[shpindex].col.B = B;
     allShapes[shpindex].col.A = A;
 
+
+}
+
+void setShapeCustomColour(unsigned long long shpindex, RGBA (*customCol)(float, float)) {
+
+
+allShapes[shpindex].useCustomCol = 1;
+allShapes[shpindex].customCol = customCol;
 
 }
 
