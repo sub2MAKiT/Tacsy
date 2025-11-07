@@ -49,7 +49,7 @@ typedef struct lineStruct {
     RGBA col;
 } lineD; // what in the actual fuck is this struct?
 
-char checkLine(float p0X, float p0Y, float p1X, float p1Y, float pointX, float pointY, char metaData);
+char checkLine(float p0X, float p0Y, float p1X, float p1Y, float pointX, float pointY);
 char checkShape(float * shapeX, float * shapeY, float pointX, float pointY, long long sizeOfShape);
 // char determineCol(float x,float y);
 void drawShapes(void * buf);
@@ -62,6 +62,7 @@ void * drawLine(void * line);
 void checkBoundaries(shape * shap);
 void addPointToShape(unsigned long long shpindex, float X, float Y);
 void setShapeColour(unsigned long long shpindex, char R, char G, char B, char A);
+RGBA mixColours(RGBA colA, RGBA colB);
 
 extern shape * allShapes;
 extern unsigned long long sizeOfAllShapes;

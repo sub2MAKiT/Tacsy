@@ -30,18 +30,15 @@ RGBA mixColours(RGBA colA, RGBA colB) {
     RGBA mixed;
 
     mixed.A = ((float)(colA.A)/255 + (1-(float)(colA.A)/255) * (float)(colB.A)/255)*255;
-    mixed.R = ( (float)(colA.R)/255 * (float)(colA.A)/255 / ((float)(colA.A)/255+ (float)(colB.A)/255) + (float)(colB.R)/255 * (float)(colB.A)/255 / ((float)(colA.A)/255+ (float)(colB.A)/255)  ) * 255;
-    mixed.G = ( (float)(colA.G)/255 * (float)(colA.A)/255 / ((float)(colA.A)/255+ (float)(colB.A)/255) + (float)(colB.G)/255 * (float)(colB.A)/255 / ((float)(colA.A)/255+ (float)(colB.A)/255)  ) * 255;
-    mixed.B = ( (float)(colA.B)/255 * (float)(colA.A)/255 / ((float)(colA.A)/255+ (float)(colB.A)/255) + (float)(colB.B)/255 * (float)(colB.A)/255 / ((float)(colA.A)/255+ (float)(colB.A)/255)  ) * 255;
+    mixed.R = ( (float)(colB.R)/255 * (float)(colB.A)/255  + (1- (float)(colB.A)/255) * (float)(colA.A)/255 * (float)(colA.R)/255) * 255;
+    mixed.G = ( (float)(colB.G)/255 * (float)(colB.A)/255  + (1- (float)(colB.A)/255) * (float)(colA.A)/255 * (float)(colA.G)/255) * 255;
+    mixed.B = ( (float)(colB.B)/255 * (float)(colB.A)/255  + (1- (float)(colB.A)/255) * (float)(colA.A)/255 * (float)(colA.B)/255) * 255;
     return mixed;
 }
 
-char checkLine(float p0X, float p0Y, float p1X, float p1Y, float pointX, float pointY, char metaData) {
+char checkLine(float p0X, float p0Y, float p1X, float p1Y, float pointX, float pointY) {
 
     if((pointY==p0Y && pointX > p0X) || (pointY==p1Y && pointX > p1X))
-        if(metaData & 1<<1)
-            return 4;
-        else
             return 3;
 
     if(pointY<=(p1Y > p0Y?p0Y:p1Y) || pointY>=(p1Y > p0Y?p1Y:p0Y))
@@ -68,12 +65,8 @@ char checkShape(float * shapeX, float * shapeY, float pointX, float pointY, long
 
     int crosses = 0;
 
-    #define lineCheck checkLine(shapeX[i], shapeY[i], shapeX[(i+1)%sizeOfShape], shapeY[(i+1)%sizeOfShape], pointX, pointY, \
-    ((shapeY[i] < shapeY[(i+1)%sizeOfShape] && shapeY[(i+1)%sizeOfShape] > shapeY[(i+2)%sizeOfShape])||(shapeY[i] > shapeY[(i+1)%sizeOfShape] && shapeY[(i+1)%sizeOfShape] < shapeY[(i+2)%sizeOfShape]))<<1 \
-    |0)
-
-    for(int i = 0; i < sizeOfShape;i += lineCheck/2+1)
-        crosses += lineCheck;
+    for(int i = 0; i < sizeOfShape;i += checkLine(shapeX[i], shapeY[i], shapeX[(i+1)%sizeOfShape], shapeY[(i+1)%sizeOfShape], pointX, pointY)/2+1)
+        crosses += checkLine(shapeX[i], shapeY[i], shapeX[(i+1)%sizeOfShape], shapeY[(i+1)%sizeOfShape], pointX, pointY) < 2?checkLine(shapeX[i], shapeY[i], shapeX[(i+1)%sizeOfShape], shapeY[(i+1)%sizeOfShape], pointX, pointY):checkLine(shapeX[i], shapeY[i], shapeX[(i+2)%sizeOfShape], shapeY[(i+2)%sizeOfShape], pointX, pointY);
 
     return crosses%2;
 
