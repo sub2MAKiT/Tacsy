@@ -9,12 +9,9 @@ float triangleY[] = {0.9,0.9,0.6,0.9,0.9,0.8,0.5,0.2,0.1,0.1,0.4,0.1,0.1,0.2,0.5
 
 
 int main(int argc, char **argv) {
-    int fd = open("tacsy.buff", O_RDWR);
     FILE *fptr;
     fptr = fopen("tacsyRGBA.buff", "w");
-    // struct stat st;
-    // fstat(fd, &st);
-    void *buf = malloc(width*height*sizeof(RGBA));//mmap(NULL, st.st_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+    void *buf = malloc(width*height*sizeof(RGBA));
 
     int input = 0;
 
@@ -44,24 +41,33 @@ int main(int argc, char **argv) {
     setShapeColour(mouthL,0,0,255,70);
     setShapeColour(mouthR,170,160,8,150);
 
+
+    unsigned long long testForLine = createShape();
+
+    addPointToShape(testForLine,0.1,0.1);
+    addPointToShape(testForLine,0.3,0.1);
+    addPointToShape(testForLine,0.5,0.3);
+    addPointToShape(testForLine,0.2,0.6);
+    addPointToShape(testForLine,0.5,0.9);
+    addPointToShape(testForLine,0.1,0.9);
+
+    // unsigned long long brick[6];
+
+    // for(int i = 0; i < 6; i++) {
+    //     srand(input+i);
+
+    //     brick[i] = createShape();
+
+    //     // printf("randomTest: %f %d\n",(double)((float)rand())/RAND_MAX,(int)(((float)rand())/RAND_MAX*255));
     
+    //     addPointToShape(brick[i],(double)((float)rand())/RAND_MAX,(double)((float)rand())/RAND_MAX);
+    //     addPointToShape(brick[i],(double)((float)rand())/RAND_MAX,(double)((float)rand())/RAND_MAX);
+    //     addPointToShape(brick[i],(double)((float)rand())/RAND_MAX,(double)((float)rand())/RAND_MAX);
+    //     addPointToShape(brick[i],(double)((float)rand())/RAND_MAX,(double)((float)rand())/RAND_MAX);
 
-    unsigned long long brick[6];
-
-    for(int i = 0; i < 6; i++) {
-        srand(input+i);
-
-        brick[i] = createShape();
-
-        // printf("randomTest: %f %d\n",(double)((float)rand())/RAND_MAX,(int)(((float)rand())/RAND_MAX*255));
+    //     setShapeColour(brick[i],(int)(((float)rand())/RAND_MAX*255),(int)(((float)rand())/RAND_MAX*255),(int)(((float)rand())/RAND_MAX*255),(int)(((float)rand())/RAND_MAX*255));
+    // }
     
-        addPointToShape(brick[i],(double)((float)rand())/RAND_MAX,(double)((float)rand())/RAND_MAX);
-        addPointToShape(brick[i],(double)((float)rand())/RAND_MAX,(double)((float)rand())/RAND_MAX);
-        addPointToShape(brick[i],(double)((float)rand())/RAND_MAX,(double)((float)rand())/RAND_MAX);
-        addPointToShape(brick[i],(double)((float)rand())/RAND_MAX,(double)((float)rand())/RAND_MAX);
-
-        setShapeColour(brick[i],(int)(((float)rand())/RAND_MAX*255),(int)(((float)rand())/RAND_MAX*255),(int)(((float)rand())/RAND_MAX*255),(int)(((float)rand())/RAND_MAX*255));
-    }
     
 
     // setShapeColour(Brick0,170,160,8,150);
