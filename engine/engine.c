@@ -76,19 +76,20 @@ void * drawLine(void * inp) {
                         line->line[j+i*width] = mixColours(line->line[j+i*width],line->useCustomCol?line->customCol(((float)j)/width,((float)(line->lineDex*line->packSize + i))/height):line->col);
 }
 
+#define PACKSIZE 20
 
 void drawShapes(void * buf) {
     int totInd = 0;
-    pthread_t threads[height];
-    lineD tempLine[height];
 
-    int packsize = 20;
+    pthread_t threads[height/PACKSIZE];
+    lineD tempLine[height/PACKSIZE];
+
     for(int shpindex = 0; shpindex < sizeOfAllShapes; shpindex++) {
-        for(int i = 0; i < height/packsize; i++) {
+        for(int i = 0; i < height/PACKSIZE; i++) {
             tempLine[i].shap = allShapes[shpindex];
-            tempLine[i].line = &(((RGBA*)buf)[width*i*packsize]);
+            tempLine[i].line = &(((RGBA*)buf)[width*i*PACKSIZE]);
             tempLine[i].lineDex = i;
-            tempLine[i].packSize = packsize;
+            tempLine[i].packSize = PACKSIZE;
             tempLine[i].col = allShapes[shpindex].col;
             tempLine[i].useCustomCol = allShapes[shpindex].useCustomCol;
             tempLine[i].customCol = allShapes[shpindex].customCol;
@@ -101,7 +102,7 @@ void drawShapes(void * buf) {
                 exit(-1);
             }
         }
-        for (int i = 0; i < height; ++i) {
+        for (int i = 0; i < height/PACKSIZE; ++i) {
             pthread_join(threads[i], NULL);
         }
     }

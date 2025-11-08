@@ -32,10 +32,23 @@ float triangleY[] = {0.9,0.9,0.6,0.9,0.9,0.8,0.5,0.2,0.1,0.1,0.4,0.1,0.1,0.2,0.5
 
 float input;
 
-RGBA rainbow(float X, float Y) {
+RGBA rainbowL(float X, float Y) {
     RGBA rainbow[6] = {(RGBA){255,0,0,255},(RGBA){250,130,0,255},(RGBA){200,200,0,255},(RGBA){0,255,0,255},(RGBA){0,0,255,255},(RGBA){150,0,255,255}};
 
-    return rainbow[(unsigned char)((X+Y-0.2 + 0.1)/2*9)%6];
+    return rainbow[(unsigned char)((X+Y*-3.8-0.50)*6)%6];
+}
+
+RGBA rainbowR(float X, float Y) {
+    RGBA rainbow[6] = {(RGBA){255,0,0,255},(RGBA){250,130,0,255},(RGBA){200,200,0,255},(RGBA){0,255,0,255},(RGBA){0,0,255,255},(RGBA){150,0,255,255}};
+
+    return rainbow[(unsigned char)((X+Y*3.8-0.50)*6)%6];
+}
+
+
+RGBA rainbowM(float X, float Y) {
+    RGBA rainbow[6] = {(RGBA){255,0,0,255},(RGBA){250,130,0,255},(RGBA){200,200,0,255},(RGBA){0,255,0,255},(RGBA){0,0,255,255},(RGBA){150,0,255,255}};
+
+    return rainbow[(unsigned char)((Y+X-0.2)/2*14)%6];
 }
 
 
@@ -66,6 +79,9 @@ int main(int argc, char **argv) {
     unsigned long long mouthL = createShape();
     unsigned long long mouthR = createShape();
 
+    unsigned long long sparkle0 = createShape();
+    unsigned long long sparkle1 = createShape();
+    unsigned long long sparkle2 = createShape();
 
     // unsigned long long brick = createShape();
 
@@ -74,17 +90,19 @@ int main(int argc, char **argv) {
     // addPointToShape(brick,1,1);
     // addPointToShape(brick,1,0);
 
-    // setShapeColour(eyeL,255,0,0,100);
+    setShapeColour(sparkle0,255,255,255,200);
+    setShapeColour(sparkle1,255,255,255,200);
+    setShapeColour(sparkle2,255,255,255,200);
 
     // setShapeColour(eyeR,0,255,0,200);
 
     // setShapeColour(mouthL,0,0,255,70);
     // setShapeColour(mouthR,170,160,8,150);
 
-    setShapeCustomColour(eyeL,rainbow);
-    setShapeCustomColour(eyeR,rainbow);
-    setShapeCustomColour(mouthL,rainbow);
-    setShapeCustomColour(mouthR,rainbow);
+    setShapeCustomColour(eyeL,rainbowL);
+    setShapeCustomColour(eyeR,rainbowR);
+    setShapeCustomColour(mouthL,rainbowM);
+    setShapeCustomColour(mouthR,rainbowM);
 
 
     // unsigned long long testForLine = createShape();
@@ -127,6 +145,9 @@ int main(int argc, char **argv) {
     // addPointToShape(brick,0.75,0.25);
 
     // addArcToShape(brick, 0.1, 0.1,concernThroughHornyToAngyRatio, 0.007, 4.7, 20,0);
+    addArcToShape(sparkle0, 0.12, 0.14,0, 0.04, PI*2, 40,0);
+    addArcToShape(sparkle1, 0.2, 0.15,0, 0.02, PI*2, 40,0);
+    addArcToShape(sparkle2, 0.08, 0.18,0, 0.01, PI*2, 40,0);
 
     addArcToShape(eyeL, 0.2, 0.2,-0.4, 0.15, 4.7, 20,0);
     addArcToShape(eyeR, 0.8, 0.2,-0.4, 0.15, 4.7, 20,1);
