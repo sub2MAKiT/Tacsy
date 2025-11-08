@@ -32,8 +32,8 @@ with open("tacsyRGBA.buff", "r+b") as f:
 
 
 
-    width = 400
-    height = 300
+    width = 320
+    height = 240
 
 
     img  = Image.new( mode = "RGB", size = (width, height), color = (0,0,0) )

@@ -83,6 +83,8 @@ int main(int argc, char **argv) {
     unsigned long long sparkle1 = createShape();
     unsigned long long sparkle2 = createShape();
 
+
+
     // unsigned long long brick = createShape();
 
     // addPointToShape(brick,0,0);
@@ -168,6 +170,7 @@ int main(int argc, char **argv) {
 
     fillBuff(blank,buf);
     drawShapes(buf);
+    referenceGrid(buf);
 
 
     // Clean up

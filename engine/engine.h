@@ -10,8 +10,8 @@
 #include <math.h>
 #include <pthread.h>
 
-#define height 300
-#define width 400
+#define height 240
+#define width 320
 
 #define PI 3.14159265
 
@@ -68,6 +68,7 @@ void addPointToShape(unsigned long long shpindex, float X, float Y);
 void setShapeColour(unsigned long long shpindex, char R, char G, char B, char A);
 RGBA mixColours(RGBA colA, RGBA colB);
 void setShapeCustomColour(unsigned long long shpindex, RGBA (*customCol)(float, float));
+void referenceGrid(void * buf);
 
 extern shape * allShapes;
 extern unsigned long long sizeOfAllShapes;

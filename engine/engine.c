@@ -111,6 +111,14 @@ void drawShapes(void * buf) {
 
 }
 
+void referenceGrid(void * buf) {
+    int totInd = 0;
+    for(float i = 0; i < height; i++) {
+        for(float j = 0; j < width; j++)
+            ((RGBA*)buf)[totInd++] = !((int)(i)%24) || !((int)(j)%32)?mixColours(((RGBA*)buf)[totInd],(RGBA){50,210,250,200}):((RGBA*)buf)[totInd];
+    }
+}
+
 void fillBuff(RGBA fill, void * buf) {
     int totInd = 0;
     for(float i = 0; i < height; i++) {
