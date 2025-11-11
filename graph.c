@@ -92,19 +92,31 @@ int main(int argc, char **argv) {
     // addPointToShape(brick,1,1);
     // addPointToShape(brick,1,0);
 
-    setShapeColour(sparkle0,255,255,255,200);
-    setShapeColour(sparkle1,255,255,255,200);
-    setShapeColour(sparkle2,255,255,255,200);
+    setShapeColour(sparkle0,(RGBA){255,255,255,200});
+    setShapeColour(sparkle1,(RGBA){255,255,255,200});
+    setShapeColour(sparkle2,(RGBA){255,255,255,200});
 
-    // setShapeColour(eyeR,0,255,0,200);
+    LGBT LGBT0 = (LGBT){1.0,0.0,0.0,1.0};
+    LGBT LGBT1 = (LGBT){0.0,1.0,0.0,1.0};
+    LGBT LGBT2 = (LGBT){0.0,0.0,1.0,1.0};
+    LGBT LGBT3 = (LGBT){1.0,0.0,1.0,1.0};
 
-    // setShapeColour(mouthL,0,0,255,70);
-    // setShapeColour(mouthR,170,160,8,150);
 
-    setShapeCustomColour(eyeL,rainbowL);
-    setShapeCustomColour(eyeR,rainbowR);
-    setShapeCustomColour(mouthL,rainbowM);
-    setShapeCustomColour(mouthR,rainbowM);
+    RGBA testCol0 = LGBTtoRGBA(LGBT0);
+    RGBA testCol1 = LGBTtoRGBA(LGBT1);
+    RGBA testCol2 = LGBTtoRGBA(LGBT2);
+    RGBA testCol3 = LGBTtoRGBA(LGBT3);
+
+    setShapeColour(eyeL,testCol0);
+    setShapeColour(eyeR,testCol1);
+
+    setShapeColour(mouthL,testCol2);
+    setShapeColour(mouthR,testCol3);
+
+    // setShapeCustomColour(eyeL,rainbowL);
+    // setShapeCustomColour(eyeR,rainbowR);
+    // setShapeCustomColour(mouthL,rainbowM);
+    // setShapeCustomColour(mouthR,rainbowM);
 
 
     // unsigned long long testForLine = createShape();

@@ -1,9 +1,5 @@
 #pragma once
 
-#include <sys/mman.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -14,6 +10,15 @@
 #define width 320
 
 #define PI 3.14159265
+
+typedef struct LGBTStruct {
+    double L;
+    double G;
+    double B;
+    double T;
+} LGBT;
+
+#define LGBTtoRGBA(LGBTv) (RGBA){LGBTv.L*255,((1-(LGBTv.L*LGBTv.B))*LGBTv.L/(sqrt(2))+LGBTv.G)*255, (LGBTv.B-(LGBTv.L*LGBTv.B)*(1-LGBTv.G))*255 ,LGBTv.T*255}
 
 typedef struct RGBAStruct {
     unsigned char R;
@@ -65,7 +70,7 @@ void addArcToShape(unsigned long long shpindex, float X, float Y, float phase, f
 void * drawLine(void * line);
 void checkBoundaries(shape * shap);
 void addPointToShape(unsigned long long shpindex, float X, float Y);
-void setShapeColour(unsigned long long shpindex, char R, char G, char B, char A);
+void setShapeColour(unsigned long long shpindex, RGBA col);
 RGBA mixColours(RGBA colA, RGBA colB);
 void setShapeCustomColour(unsigned long long shpindex, RGBA (*customCol)(float, float));
 void referenceGrid(void * buf);

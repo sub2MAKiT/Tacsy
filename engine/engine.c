@@ -42,9 +42,12 @@ char checkShape(float * shapeX, float * shapeY, float pointX, float pointY, long
 
     int crosses = 0;
 
-    for(int i = 0; i < sizeOfShape;i += checkLine(shapeX[i], shapeY[i], shapeX[(i+1)%sizeOfShape], shapeY[(i+1)%sizeOfShape], pointX, pointY)/2+1)
-        crosses += checkLine(shapeX[i], shapeY[i], shapeX[(i+1)%sizeOfShape], shapeY[(i+1)%sizeOfShape], pointX, pointY) < 2?checkLine(shapeX[i], shapeY[i], shapeX[(i+1)%sizeOfShape], shapeY[(i+1)%sizeOfShape], pointX, pointY):checkLine(shapeX[i], shapeY[i], shapeX[(i+2)%sizeOfShape], shapeY[(i+2)%sizeOfShape], pointX, pointY);
+    int checkLineV = 0;
 
+    for(int i = 0; i < sizeOfShape;i+= checkLine(shapeX[i], shapeY[i], shapeX[(i+1)%sizeOfShape], shapeY[(i+1)%sizeOfShape], pointX, pointY)/2+1) {
+        crosses += checkLineV < 2?checkLine(shapeX[i], shapeY[i], shapeX[(i+1)%sizeOfShape], shapeY[(i+1)%sizeOfShape], pointX, pointY):checkLine(shapeX[i], shapeY[i], shapeX[(i+1)%sizeOfShape], shapeY[(i+1)%sizeOfShape], pointX, pointY);
+        i += checkLineV;
+    }
     return crosses%2;
 
 }
@@ -199,12 +202,12 @@ void addPointToShape(unsigned long long shpindex, float X, float Y) {
     checkBoundaries(&allShapes[shpindex]);
 }
 
-void setShapeColour(unsigned long long shpindex, char R, char G, char B, char A) {
+void setShapeColour(unsigned long long shpindex, RGBA col) {
 
-    allShapes[shpindex].col.R = R;
-    allShapes[shpindex].col.G = G;
-    allShapes[shpindex].col.B = B;
-    allShapes[shpindex].col.A = A;
+    allShapes[shpindex].col.R = col.R;
+    allShapes[shpindex].col.G = col.G;
+    allShapes[shpindex].col.B = col.B;
+    allShapes[shpindex].col.A = col.A;
 
 
 }
